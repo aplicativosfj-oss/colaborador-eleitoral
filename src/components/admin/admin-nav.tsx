@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { StarEmblem } from "@/components/site/star-emblem";
 import { AcreFlag } from "@/components/site/acre-flag";
 import { ThemeToggle } from "@/components/site/theme-toggle";
+import { JovemPanPlayer } from "@/components/site/jovem-pan-player";
 import { useAuth } from "@/lib/auth-context";
 import type { UserRole } from "@/lib/types";
 
@@ -68,6 +69,9 @@ export function AdminNav() {
               {roleLabel[profile.role]}
             </Badge>
           )}
+          <div className="hidden sm:block">
+            <JovemPanPlayer />
+          </div>
           <ThemeToggle />
           <Button
             variant="ghost"
