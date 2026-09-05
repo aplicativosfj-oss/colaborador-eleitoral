@@ -1,40 +1,66 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Pause, Play, Radio } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const LIVE_URL = "https://jovempan.com.br/ao-vivo/";
+// Real, working Jovem Pan FM (São Paulo, 100.9) stream, sourced from the
+// Radio Browser open directory (radio-browser.info) — a community-maintained
+// database of direct, playable station stream URLs, exactly built for this.
+// Jovem Pan itself publishes no official embeddable stream or "now playing"
+// API, so a plain <audio> tag can play the real signal but can't show a
+// live track title (that metadata simply isn't exposed anywhere public).
+const STREAM_URL = "https://stream.zeno.fm/c45wbq2us3buv";
 
-/**
- * Jovem Pan doesn't publish an official embeddable stream URL or a "now
- * playing" API for third-party sites, so this player can't pull the real
- * audio or track name in-page. Instead it's an honest, polished affordance:
- * pressing play opens their official live stream in a new tab (real audio,
- * their player, their ads) while this stays a lightweight now-playing badge.
- */
 export function JovemPanPlayer() {
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errored, setErrored] = useState(false);
 
   function handleToggle() {
-    if (!playing) {
-      try {
-        window.open(LIVE_URL, "_blank", "noopener,noreferrer");
-      } catch {
-        // Popup blocked by the browser; the visual state still toggles.
-      }
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (playing) {
+      audio.pause();
+      return;
     }
-    setPlaying((p) => !p);
+
+    setErrored(false);
+    setLoading(true);
+    audio.play().catch(() => {
+      setLoading(false);
+      setErrored(true);
+    });
   }
 
   return (
     <div
-      title="Abre o áudio ao vivo da Jovem Pan em uma nova aba"
-      className="group flex items-center gap-2 rounded-full border border-input bg-background/60 py-1 pl-1 pr-3 shadow-sm transition-colors hover:border-primary/40"
+      title={errored ? "Não foi possível conectar ao stream agora" : "Jovem Pan FM ao vivo"}
+      className="flex items-center gap-2 rounded-full border border-input bg-background/60 py-1 pl-1 pr-3 shadow-sm transition-colors hover:border-primary/40"
     >
+      <audio
+        ref={audioRef}
+        src={STREAM_URL}
+        preload="none"
+        onPlaying={() => {
+          setLoading(false);
+          setPlaying(true);
+        }}
+        onPause={() => setPlaying(false)}
+        onWaiting={() => setLoading(true)}
+        onError={() => {
+          setLoading(false);
+          setPlaying(false);
+          setErrored(true);
+        }}
+      />
+
       <button
         type="button"
         onClick={handleToggle}
-        aria-label={playing ? "Marcar como pausado" : "Ouvir Jovem Pan ao vivo"}
-        className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform active:scale-90"
+        aria-label={playing ? "Pausar Jovem Pan" : "Ouvir Jovem Pan ao vivo"}
+        className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform active:scale-90 disabled:opacity-50"
+        disabled={loading}
       >
         {playing ? (
           <Pause className="size-3.5" fill="currentColor" />
@@ -47,7 +73,9 @@ export function JovemPanPlayer() {
         <Radio className="size-3.5 text-muted-foreground" />
         <div className="flex flex-col leading-none">
           <span className="text-xs font-semibold text-foreground">Jovem Pan</span>
-          <span className="text-[10px] text-muted-foreground">Ao vivo</span>
+          <span className="text-[10px] text-muted-foreground">
+            {errored ? "Indisponível" : loading ? "Conectando…" : "Ao vivo"}
+          </span>
         </div>
       </div>
 
