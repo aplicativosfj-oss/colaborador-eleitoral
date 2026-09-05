@@ -27,6 +27,16 @@ export interface Eleitor {
   created_at: string;
 }
 
+export interface Interessado {
+  id: string;
+  nome_completo: string;
+  cpf: string;
+  cidade: string | null;
+  whatsapp: string | null;
+  email: string;
+  created_at: string;
+}
+
 export interface EleitorFormValues {
   nome_completo: string;
   cpf: string;

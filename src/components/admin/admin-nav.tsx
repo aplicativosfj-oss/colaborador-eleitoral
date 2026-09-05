@@ -26,6 +26,9 @@ export function AdminNav() {
   if (profile?.role === "candidato" || profile?.role === "admin") {
     links.push({ to: "/admin/candidato", label: "Painel geral" });
   }
+  if (profile?.role === "candidato" || profile?.role === "admin") {
+    links.push({ to: "/admin/interessados", label: "Interessados" });
+  }
   if (profile?.role === "admin") {
     links.push({ to: "/admin/usuarios", label: "Usuários" });
   }

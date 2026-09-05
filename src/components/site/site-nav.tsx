@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { StarEmblem } from "./star-emblem";
 import { AcreFlag } from "./acre-flag";
 import { ThemeToggle } from "./theme-toggle";
+import { JovemPanPlayer } from "./jovem-pan-player";
 
 const links = [
   { href: "#sobre", label: "Sobre" },
@@ -38,15 +39,9 @@ export function SiteNav() {
         </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <a
-            href="https://jovempan.com.br/ao-vivo/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden items-center gap-1.5 rounded-md border border-input px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:scale-95 sm:inline-flex"
-          >
-            <Radio className="size-3.5" />
-            Jovem Pan
-          </a>
+          <div className="hidden sm:block">
+            <JovemPanPlayer />
+          </div>
           <ThemeToggle />
           <Button asChild variant="outline" size="sm" className="hidden lg:inline-flex">
             <Link to="/login">Entrar</Link>

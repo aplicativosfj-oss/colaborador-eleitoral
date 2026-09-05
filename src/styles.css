@@ -142,3 +142,23 @@
     color: var(--color-foreground);
   }
 }
+
+@keyframes eq-bounce {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.eq-bar {
+  transform-origin: bottom;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .eq-bar[data-playing="true"] {
+    animation: eq-bounce 0.9s ease-in-out infinite;
+  }
+}
