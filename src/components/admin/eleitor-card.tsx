@@ -24,7 +24,7 @@ export function EleitorCard({
     <button
       type="button"
       onClick={onClick}
-      className="group flex flex-col gap-3 rounded-2xl border border-border/70 bg-card p-4 text-left transition-colors hover:border-primary/40 hover:bg-accent/40"
+      className="group flex flex-col gap-3 rounded-2xl border border-border/70 bg-card p-4 text-left transition-[color,background-color,border-color,transform,box-shadow] duration-200 hover:border-primary/40 hover:bg-accent/40 hover:shadow-md motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.98]"
     >
       <div className="flex items-center gap-3">
         <Avatar className="size-12 border">

@@ -57,3 +57,29 @@ export function isValidTituloEleitor(value: string) {
 
   return true;
 }
+
+export function formatPhoneBR(value: string) {
+  const d = onlyDigits(value).slice(0, 11);
+  if (d.length <= 10) {
+    return d.replace(/^(\d{2})(\d)/, "($1) $2").replace(/(\d{4})(\d{1,4})$/, "$1-$2");
+  }
+  return d.replace(/^(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+}
+
+export function isValidPhoneBR(value: string) {
+  const d = onlyDigits(value);
+  if (d.length !== 10 && d.length !== 11) return false;
+  const ddd = Number(d.slice(0, 2));
+  if (ddd < 11 || ddd > 99) return false;
+  if (d.length === 11 && d[2] !== "9") return false;
+  return true;
+}
+
+export function formatSecaoEleitoral(value: string) {
+  return onlyDigits(value).slice(0, 4);
+}
+
+export function isValidSecaoEleitoral(value: string) {
+  const d = onlyDigits(value);
+  return d.length === 3 || d.length === 4;
+}

@@ -20,7 +20,7 @@ import { supabase } from "@/lib/supabase";
 import { uploadFotoEleitor } from "@/lib/storage";
 import { eleitorSchema, type EleitorSchema } from "@/lib/validation";
 import { MUNICIPIOS_ACRE } from "@/lib/municipios";
-import { formatCPF } from "@/lib/validators";
+import { formatCPF, formatPhoneBR, formatSecaoEleitoral } from "@/lib/validators";
 
 export function EleitorForm({ onCreated }: { onCreated: () => void }) {
   const { user } = useAuth();
@@ -37,6 +37,8 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
   } = useForm<EleitorSchema>({ resolver: zodResolver(eleitorSchema) });
 
   const cpfField = register("cpf");
+  const whatsappField = register("whatsapp");
+  const secaoField = register("secao_voto");
 
   function handleFotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
@@ -137,7 +139,17 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="whatsapp">WhatsApp para contato</Label>
-        <Input id="whatsapp" placeholder="(68) 90000-0000" {...register("whatsapp")} />
+        <Input
+          id="whatsapp"
+          inputMode="numeric"
+          placeholder="(68) 90000-0000"
+          {...whatsappField}
+          onChange={(e) => {
+            e.target.value = formatPhoneBR(e.target.value);
+            whatsappField.onChange(e);
+          }}
+        />
+        {errors.whatsapp && <p className="text-xs text-destructive">{errors.whatsapp.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -187,7 +199,19 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="secao_voto">Seção de voto</Label>
-        <Input id="secao_voto" {...register("secao_voto")} />
+        <Input
+          id="secao_voto"
+          inputMode="numeric"
+          placeholder="0000"
+          {...secaoField}
+          onChange={(e) => {
+            e.target.value = formatSecaoEleitoral(e.target.value);
+            secaoField.onChange(e);
+          }}
+        />
+        {errors.secao_voto && (
+          <p className="text-xs text-destructive">{errors.secao_voto.message}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1.5">

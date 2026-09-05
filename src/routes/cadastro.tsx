@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
-import { CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { StarEmblem } from "@/components/site/star-emblem";
 import { supabase } from "@/lib/supabase";
 import { signupSchema } from "@/lib/validation";
-import { formatCPF } from "@/lib/validators";
+import { formatCPF, formatPhoneBR } from "@/lib/validators";
 import type { z } from "zod";
 
 export const Route = createFileRoute("/cadastro")({
@@ -30,6 +30,7 @@ function CadastroPage() {
   } = useForm<SignupValues>({ resolver: zodResolver(signupSchema) });
 
   const cpfField = register("cpf");
+  const whatsappField = register("whatsapp");
 
   async function onSubmit(values: SignupValues) {
     setSubmitting(true);
@@ -55,7 +56,14 @@ function CadastroPage() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-muted/30 px-4 py-16">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-muted/30 px-4 py-16">
+      <Link
+        to="/"
+        className="mb-4 flex w-full max-w-sm items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="size-4" />
+        Voltar para o início
+      </Link>
       <Card className="w-full max-w-sm rounded-2xl">
         <CardHeader className="items-center text-center">
           <span className="mb-2 flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -106,9 +114,14 @@ function CadastroPage() {
                 <Label htmlFor="whatsapp">WhatsApp</Label>
                 <Input
                   id="whatsapp"
+                  inputMode="numeric"
                   placeholder="(68) 90000-0000"
                   autoComplete="tel"
-                  {...register("whatsapp")}
+                  {...whatsappField}
+                  onChange={(e) => {
+                    e.target.value = formatPhoneBR(e.target.value);
+                    whatsappField.onChange(e);
+                  }}
                 />
                 {errors.whatsapp && (
                   <p className="text-xs text-destructive">{errors.whatsapp.message}</p>

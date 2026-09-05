@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Menu } from "lucide-react";
+import { Menu, Radio } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { StarEmblem } from "./star-emblem";
+import { AcreFlag } from "./acre-flag";
+import { ThemeToggle } from "./theme-toggle";
 
 const links = [
   { href: "#sobre", label: "Sobre" },
@@ -14,12 +16,13 @@ export function SiteNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform active:scale-95">
             <StarEmblem className="size-4" />
           </span>
           <span className="text-sm sm:text-base">Colaborador Eleitoral</span>
+          <AcreFlag className="hidden w-5 sm:block" />
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">
@@ -27,26 +30,36 @@ export function SiteNav() {
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="relative text-sm text-muted-foreground transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-foreground after:transition-all hover:text-foreground hover:after:w-full"
             >
               {link.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <Button asChild variant="outline" size="sm">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <a
+            href="https://jovempan.com.br/ao-vivo/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-1.5 rounded-md border border-input px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground active:scale-95 sm:inline-flex"
+          >
+            <Radio className="size-3.5" />
+            Jovem Pan
+          </a>
+          <ThemeToggle />
+          <Button asChild variant="outline" size="sm" className="hidden lg:inline-flex">
             <Link to="/login">Entrar</Link>
           </Button>
-        </div>
 
-        <button
-          className="inline-flex size-9 items-center justify-center rounded-md lg:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Abrir menu"
-        >
-          <Menu className="size-5" />
-        </button>
+          <button
+            className="inline-flex size-9 items-center justify-center rounded-md transition-colors hover:bg-accent lg:hidden"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Abrir menu"
+          >
+            <Menu className="size-5" />
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -62,6 +75,15 @@ export function SiteNav() {
                 {link.label}
               </a>
             ))}
+            <a
+              href="https://jovempan.com.br/ao-vivo/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground sm:hidden"
+            >
+              <Radio className="size-3.5" />
+              Rádio Jovem Pan
+            </a>
             <Button asChild variant="outline" size="sm" className="mt-1 w-full">
               <Link to="/login">Entrar</Link>
             </Button>
