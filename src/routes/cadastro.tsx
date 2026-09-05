@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { StarEmblem } from "@/components/site/star-emblem";
 import { supabase } from "@/lib/supabase";
 import { signupSchema } from "@/lib/validation";
+import { formatCPF } from "@/lib/validators";
 import type { z } from "zod";
 
 export const Route = createFileRoute("/cadastro")({
@@ -28,6 +29,8 @@ function CadastroPage() {
     formState: { errors },
   } = useForm<SignupValues>({ resolver: zodResolver(signupSchema) });
 
+  const cpfField = register("cpf");
+
   async function onSubmit(values: SignupValues) {
     setSubmitting(true);
     const { error } = await supabase.auth.signUp({
@@ -37,6 +40,7 @@ function CadastroPage() {
         data: {
           full_name: values.full_name,
           whatsapp: values.whatsapp,
+          cpf: values.cpf,
         },
       },
     });
@@ -83,6 +87,20 @@ function CadastroPage() {
                 {errors.full_name && (
                   <p className="text-xs text-destructive">{errors.full_name.message}</p>
                 )}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="cpf">CPF</Label>
+                <Input
+                  id="cpf"
+                  inputMode="numeric"
+                  placeholder="000.000.000-00"
+                  {...cpfField}
+                  onChange={(e) => {
+                    e.target.value = formatCPF(e.target.value);
+                    cpfField.onChange(e);
+                  }}
+                />
+                {errors.cpf && <p className="text-xs text-destructive">{errors.cpf.message}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="whatsapp">WhatsApp</Label>

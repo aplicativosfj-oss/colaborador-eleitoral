@@ -76,6 +76,7 @@ function UsuariosPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
+                <TableHead>CPF</TableHead>
                 <TableHead>WhatsApp</TableHead>
                 <TableHead>Papel atual</TableHead>
                 <TableHead>Alterar papel</TableHead>
@@ -87,6 +88,7 @@ function UsuariosPage() {
                   <TableCell className="font-medium text-foreground">
                     {p.full_name || "Sem nome"}
                   </TableCell>
+                  <TableCell className="text-muted-foreground">{p.cpf || "-"}</TableCell>
                   <TableCell className="text-muted-foreground">{p.whatsapp || "-"}</TableCell>
                   <TableCell>
                     <Badge variant={p.role === "pendente" ? "secondary" : "default"}>
@@ -114,7 +116,7 @@ function UsuariosPage() {
               ))}
               {!loading && profiles.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={4} className="py-10 text-center text-muted-foreground">
+                  <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
                     Nenhum usuário cadastrado ainda.
                   </TableCell>
                 </TableRow>

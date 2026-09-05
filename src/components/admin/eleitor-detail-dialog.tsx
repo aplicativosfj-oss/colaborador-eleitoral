@@ -60,11 +60,13 @@ export function EleitorDetailDialog({
             <Separator />
 
             <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="CPF" value={eleitor.cpf} />
               <Field label="Título de eleitor" value={eleitor.titulo_eleitor} />
+              <Field label="Zona eleitoral" value={eleitor.zona} />
+              <Field label="Seção de voto" value={eleitor.secao_voto} />
               <Field label="WhatsApp" value={eleitor.whatsapp} />
               <Field label="Município" value={eleitor.municipio} />
               <Field label="Local de votação" value={eleitor.local_votacao} />
-              <Field label="Seção de voto" value={eleitor.secao_voto} />
               <Field label="Valor recebido" value={formatBRL(eleitor.valor_recebido)} />
               <Field label="Endereço" value={eleitor.endereco} />
               <Field

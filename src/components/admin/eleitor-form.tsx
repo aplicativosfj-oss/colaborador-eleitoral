@@ -20,6 +20,7 @@ import { supabase } from "@/lib/supabase";
 import { uploadFotoEleitor } from "@/lib/storage";
 import { eleitorSchema, type EleitorSchema } from "@/lib/validation";
 import { MUNICIPIOS_ACRE } from "@/lib/municipios";
+import { formatCPF } from "@/lib/validators";
 
 export function EleitorForm({ onCreated }: { onCreated: () => void }) {
   const { user } = useAuth();
@@ -34,6 +35,8 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
     reset,
     formState: { errors },
   } = useForm<EleitorSchema>({ resolver: zodResolver(eleitorSchema) });
+
+  const cpfField = register("cpf");
 
   function handleFotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
@@ -53,7 +56,9 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
       const { error } = await supabase.from("eleitores").insert({
         colaborador_id: user.id,
         nome_completo: values.nome_completo,
+        cpf: values.cpf,
         titulo_eleitor: values.titulo_eleitor || null,
+        zona: values.zona || null,
         whatsapp: values.whatsapp || null,
         endereco: values.endereco || null,
         municipio: values.municipio || null,
@@ -69,7 +74,9 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
       toast.success("Eleitor cadastrado com sucesso");
       reset({
         nome_completo: "",
+        cpf: "",
         titulo_eleitor: "",
+        zona: "",
         whatsapp: "",
         endereco: "",
         municipio: "",
@@ -114,13 +121,36 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="titulo_eleitor">Título de eleitor</Label>
-        <Input id="titulo_eleitor" {...register("titulo_eleitor")} />
+        <Label htmlFor="cpf">CPF</Label>
+        <Input
+          id="cpf"
+          inputMode="numeric"
+          placeholder="000.000.000-00"
+          {...cpfField}
+          onChange={(e) => {
+            e.target.value = formatCPF(e.target.value);
+            cpfField.onChange(e);
+          }}
+        />
+        {errors.cpf && <p className="text-xs text-destructive">{errors.cpf.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="whatsapp">WhatsApp para contato</Label>
         <Input id="whatsapp" placeholder="(68) 90000-0000" {...register("whatsapp")} />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="titulo_eleitor">Título de eleitor</Label>
+        <Input id="titulo_eleitor" placeholder="0000 0000 0000" {...register("titulo_eleitor")} />
+        {errors.titulo_eleitor && (
+          <p className="text-xs text-destructive">{errors.titulo_eleitor.message}</p>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="zona">Zona eleitoral</Label>
+        <Input id="zona" {...register("zona")} />
       </div>
 
       <div className="flex flex-col gap-1.5 sm:col-span-2">
