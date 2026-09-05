@@ -65,6 +65,12 @@ export function RadioProvider({ children }: { children: ReactNode }) {
     }
 
     setStatus("loading");
+    // zeno.fm's stream URL redirects to a short-lived signed link, so a stale
+    // connection from a while ago may no longer be valid. Reassigning src
+    // forces a fresh redirect/token every time the user presses play, not
+    // just the first time.
+    sharedAudio.src = STREAM_URL;
+    sharedAudio.load();
     sharedAudio.play().catch(() => setStatus("error"));
   }
 
