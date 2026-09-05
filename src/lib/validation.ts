@@ -26,7 +26,10 @@ export const eleitorSchema = z.object({
 export type EleitorSchema = z.infer<typeof eleitorSchema>;
 
 export const loginSchema = z.object({
-  email: z.string().email("Informe um e-mail válido"),
+  cpf: z
+    .string()
+    .min(1, "Informe o CPF")
+    .refine((v) => isValidCPF(v), "CPF inválido"),
   password: z.string().min(6, "Mínimo de 6 caracteres"),
 });
 

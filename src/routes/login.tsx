@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { StarEmblem } from "@/components/site/star-emblem";
 import { supabase } from "@/lib/supabase";
 import { loginSchema } from "@/lib/validation";
+import { formatCPF, onlyDigits } from "@/lib/validators";
 import type { z } from "zod";
 
 export const Route = createFileRoute("/login")({
@@ -27,16 +28,31 @@ function LoginPage() {
     formState: { errors },
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
 
+  const cpfField = register("cpf");
+
   async function onSubmit(values: LoginValues) {
     setSubmitting(true);
+
+    const { data: email, error: lookupError } = await supabase.rpc("email_for_cpf", {
+      p_cpf: onlyDigits(values.cpf),
+    });
+
+    if (lookupError || !email) {
+      setSubmitting(false);
+      toast.error("CPF não encontrado", {
+        description: "Confira o CPF ou peça ao time da campanha para liberar seu acesso.",
+      });
+      return;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
-      email: values.email,
+      email,
       password: values.password,
     });
     setSubmitting(false);
 
     if (error) {
-      toast.error("Não foi possível entrar", { description: error.message });
+      toast.error("Não foi possível entrar", { description: "Senha incorreta." });
       return;
     }
 
@@ -57,9 +73,19 @@ function LoginPage() {
         <CardContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email">E-mail</Label>
-              <Input id="email" type="email" autoComplete="email" {...register("email")} />
-              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+              <Label htmlFor="cpf">CPF</Label>
+              <Input
+                id="cpf"
+                inputMode="numeric"
+                placeholder="000.000.000-00"
+                autoComplete="username"
+                {...cpfField}
+                onChange={(e) => {
+                  e.target.value = formatCPF(e.target.value);
+                  cpfField.onChange(e);
+                }}
+              />
+              {errors.cpf && <p className="text-xs text-destructive">{errors.cpf.message}</p>}
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="password">Senha</Label>
