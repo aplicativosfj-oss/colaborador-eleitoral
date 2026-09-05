@@ -4,8 +4,8 @@ import { StarEmblem } from "./star-emblem";
 export function SiteFooter() {
   return (
     <footer className="border-t border-border/60 bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="flex flex-col gap-10 md:flex-row md:justify-between">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           <div className="max-w-sm">
             <div className="flex items-center gap-2 font-semibold tracking-tight">
               <span className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -53,7 +53,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-border/60 pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
+        <div className="mt-6 flex flex-col gap-2 border-t border-border/60 pt-4 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
           <p>
             Conteúdo de apoio à candidatura de Pedro Abreu (Deputado Estadual - AC), campanha
             eleitoral 2026.

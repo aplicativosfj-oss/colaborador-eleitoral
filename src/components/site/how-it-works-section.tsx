@@ -21,20 +21,20 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="como-funciona" className="border-t border-border/60 py-20 md:py-28">
-      <div className="mx-auto grid max-w-7xl gap-16 px-4 sm:px-6 md:grid-cols-2">
+    <section id="como-funciona" className="border-t border-border/60 py-12 md:py-16">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 md:grid-cols-2">
         <Reveal>
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             Como funciona a mobilização
           </h2>
-          <p className="mt-4 max-w-[46ch] text-base leading-relaxed text-muted-foreground">
+          <p className="mt-3 max-w-[46ch] text-sm leading-relaxed text-muted-foreground md:text-base">
             Um painel simples para o colaborador cadastrar eleitores em campo e um painel completo
             para o candidato enxergar o resultado do trabalho de cada equipe, em cada município do
             Acre.
           </p>
         </Reveal>
 
-        <ol className="relative flex flex-col gap-10">
+        <ol className="relative flex flex-col gap-6">
           {steps.map((step, i) => (
             <Reveal key={step.title} delay={i * 100}>
               <li className="relative flex gap-5">
