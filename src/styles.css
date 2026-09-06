@@ -174,3 +174,12 @@
     animation: eq-bounce 0.9s ease-in-out infinite;
   }
 }
+
+/* Hide the Lovable "Made with Lovable" badge */
+[data-lovable-badge],
+.lovable-badge,
+a[href*="lovable.dev"][target="_blank"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
