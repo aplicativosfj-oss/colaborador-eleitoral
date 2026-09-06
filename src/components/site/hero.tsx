@@ -2,21 +2,33 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "./reveal";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const CANDIDATE_IMAGE = "/pastor.jpg";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
+      <img
+        src={heroBg}
+        alt=""
+        aria-hidden
+        width={1920}
+        height={1080}
+        className="absolute inset-0 size-full object-cover"
+        loading="eager"
+        fetchPriority="high"
+      />
+      {/* Camada de escurecimento nas cores da marca para garantir legibilidade */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(155deg, var(--brand-navy) 0%, var(--brand-blue) 55%, var(--brand-green) 100%)",
+            "linear-gradient(100deg, color-mix(in oklab, var(--brand-navy) 88%, transparent) 0%, color-mix(in oklab, var(--brand-navy) 62%, transparent) 45%, color-mix(in oklab, var(--brand-navy) 25%, transparent) 100%)",
         }}
       />
       <div
-        className="absolute inset-0 opacity-[0.07]"
+        className="absolute inset-0 opacity-[0.05]"
         style={{
           backgroundImage:
             "repeating-linear-gradient(135deg, white 0 2px, transparent 2px 22px)",
