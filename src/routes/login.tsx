@@ -3,12 +3,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, LockKeyhole, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { StarEmblem } from "@/components/site/star-emblem";
+import { CampaignMark } from "@/components/site/campaign-mark";
 import { supabase } from "@/lib/supabase";
 import { loginSchema } from "@/lib/validation";
 import { formatCPF, onlyDigits } from "@/lib/validators";
@@ -16,6 +15,16 @@ import type { z } from "zod";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
+  head: () => ({
+    meta: [
+      { title: "Entrar | Colaborador Eleitoral" },
+      { name: "description", content: "Acesso seguro à gestão eleitoral da campanha Pedro Abreu 2026." },
+      { property: "og:title", content: "Entrar | Colaborador Eleitoral" },
+      { property: "og:description", content: "Acesso seguro à gestão eleitoral da campanha Pedro Abreu 2026." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
 });
 
 type LoginValues = z.infer<typeof loginSchema>;
@@ -62,42 +71,38 @@ function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden px-4 py-16">
+    <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-muted px-4 py-10">
       <img
         src="/pastor.jpg"
-        alt=""
-        className="absolute inset-0 size-full object-cover object-left-top"
+        alt="Pastor Pedro Abreu"
+        className="absolute inset-y-0 left-0 hidden h-full w-[48%] object-cover object-top lg:block"
       />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(160deg, var(--brand-navy) 0%, oklch(0.24 0.09 264 / 0.92) 45%, var(--brand-green) 100%)",
-          opacity: 0.93,
-        }}
-      />
+      <div className="absolute inset-y-0 left-0 hidden w-[48%] bg-brand-navy/35 lg:block" />
 
-      <div className="relative flex w-full max-w-sm flex-col items-center">
+      <div className="relative flex w-full max-w-[420px] flex-col lg:ml-[42%]">
         <Link
           to="/"
-          className="mb-4 flex items-center gap-1.5 self-start text-sm font-medium text-white/85 transition-colors hover:text-white"
+          className="mb-3 flex items-center gap-1.5 self-start text-xs font-semibold text-muted-foreground transition-all hover:-translate-x-0.5 hover:text-foreground"
         >
           <ArrowLeft className="size-4" />
           Voltar para o início
         </Link>
 
-        <Card className="w-full rounded-2xl border-white/10 bg-card/95 shadow-xl backdrop-blur">
-          <CardHeader className="items-center text-center">
-            <span className="mb-2 flex size-10 items-center justify-center rounded-full bg-brand-gold text-brand-navy transition-transform active:scale-95">
-              <StarEmblem className="size-5" />
-            </span>
-            <CardTitle className="text-xl">Entrar</CardTitle>
-            <CardDescription>Acesse o painel do colaborador ou da campanha.</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <section className="w-full overflow-hidden rounded-xl border border-border bg-card shadow-xl">
+          <div className="relative overflow-hidden bg-brand-navy px-7 py-6 text-primary-foreground">
+            <div className="absolute -right-10 -top-12 size-32 rotate-45 bg-brand-green/25" />
+            <div className="absolute -bottom-14 -left-10 size-28 rotate-45 bg-brand-gold/20" />
+            <CampaignMark className="relative" />
+            <p className="relative mt-3 text-xs text-primary-foreground/65">Portal seguro do colaborador e da administração.</p>
+          </div>
+          <div className="p-7">
+            <div className="mb-5 flex items-center justify-between">
+              <div><h1 className="text-xl font-bold text-foreground">Entrar</h1><p className="mt-1 text-xs text-muted-foreground">Use seu CPF e sua senha de acesso.</p></div>
+              <span className="flex size-9 items-center justify-center rounded-lg bg-secondary text-secondary-foreground"><ShieldCheck className="size-4" /></span>
+            </div>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="cpf">CPF</Label>
+                <Label htmlFor="cpf" className="text-[11px] font-bold uppercase text-muted-foreground">CPF</Label>
                 <Input
                   id="cpf"
                   inputMode="numeric"
@@ -112,22 +117,18 @@ function LoginPage() {
                 {errors.cpf && <p className="text-xs text-destructive">{errors.cpf.message}</p>}
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="password">Senha</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  autoComplete="current-password"
-                  {...register("password")}
-                />
+                <Label htmlFor="password" className="text-[11px] font-bold uppercase text-muted-foreground">Senha de acesso</Label>
+                <div className="relative"><Input id="password" type="password" autoComplete="current-password" className="pr-10" {...register("password")} /><LockKeyhole className="pointer-events-none absolute right-3 top-2.5 size-4 text-muted-foreground" /></div>
                 {errors.password && (
                   <p className="text-xs text-destructive">{errors.password.message}</p>
                 )}
               </div>
-              <Button type="submit" className="mt-2" disabled={submitting}>
-                {submitting ? "Entrando..." : "Entrar"}
+              <Button type="submit" className="group mt-1 bg-brand-green text-primary-foreground hover:bg-brand-green/90" disabled={submitting}>
+                {submitting ? "Entrando..." : "Entrar no sistema"}
+                {!submitting && <ArrowRight className="transition-transform group-hover:translate-x-1" />}
               </Button>
             </form>
-            <p className="mt-6 text-center text-sm text-muted-foreground">
+            <p className="mt-5 border-t border-border pt-5 text-center text-xs text-muted-foreground">
               Ainda não tem conta?{" "}
               <Link
                 to="/cadastro"
@@ -136,8 +137,8 @@ function LoginPage() {
                 Quero ser colaborador
               </Link>
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </section>
       </div>
     </div>
   );
