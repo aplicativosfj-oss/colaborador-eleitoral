@@ -118,7 +118,7 @@ function ApoioPublicoPage() {
   }
 
   return (
-    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-4 py-16">
+    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-4 py-6">
       <img
         src="/pastor.jpg"
         alt=""
@@ -133,34 +133,35 @@ function ApoioPublicoPage() {
         }}
       />
 
-      <Link
-        to="/"
-        className="relative mb-4 flex w-full max-w-md items-center gap-1.5 text-sm font-medium text-white/85 transition-colors hover:text-white"
-      >
-        <ArrowLeft className="size-4" />
-        Página inicial
-      </Link>
+      <div className="relative flex w-full max-w-md flex-col" style={{ maxHeight: "100dvh" }}>
+        <Link
+          to="/"
+          className="mb-2 flex items-center gap-1.5 text-sm font-medium text-white/85 transition-colors hover:text-white"
+        >
+          <ArrowLeft className="size-4" />
+          Página inicial
+        </Link>
 
-      <Card className="relative w-full max-w-md rounded-2xl border-white/10 bg-card/95 shadow-xl backdrop-blur">
-        <CardHeader className="items-center text-center">
-          <CampaignMark className="text-brand-navy dark:text-foreground" />
-          <CardTitle className="mt-3 text-xl">Quero apoiar a candidatura</CardTitle>
-          {nomeColaborador === undefined && (
-            <CardDescription>Carregando...</CardDescription>
-          )}
-          {nomeColaborador === null && (
-            <CardDescription className="flex items-center gap-1.5 text-destructive">
-              <ShieldAlert className="size-4" />
-              Link inválido ou expirado.
-            </CardDescription>
-          )}
-          {nomeColaborador && (
-            <CardDescription>
-              Você está se cadastrando através de <strong>{nomeColaborador}</strong>.
-            </CardDescription>
-          )}
-        </CardHeader>
-        <CardContent>
+        <Card className="flex max-h-[calc(100dvh-3rem)] flex-col overflow-hidden rounded-2xl border-white/10 bg-card/95 shadow-xl backdrop-blur">
+          <CardHeader className="items-center gap-0.5 py-4 text-center">
+            <CampaignMark className="text-brand-navy dark:text-foreground" />
+            <CardTitle className="mt-2 text-lg">Quero apoiar a candidatura</CardTitle>
+            {nomeColaborador === undefined && (
+              <CardDescription className="text-xs">Carregando...</CardDescription>
+            )}
+            {nomeColaborador === null && (
+              <CardDescription className="flex items-center gap-1.5 text-xs text-destructive">
+                <ShieldAlert className="size-4" />
+                Link inválido ou expirado.
+              </CardDescription>
+            )}
+            {nomeColaborador && (
+              <CardDescription className="text-xs">
+                Você está se cadastrando através de <strong>{nomeColaborador}</strong>.
+              </CardDescription>
+            )}
+          </CardHeader>
+          <CardContent className="overflow-y-auto pt-0">
           {done ? (
             <div className="flex flex-col items-center gap-3 py-4 text-center">
               <CheckCircle2 className="size-10 text-primary" />
@@ -175,8 +176,8 @@ function ApoioPublicoPage() {
               Peça um link novo para quem te convidou a apoiar a campanha.
             </p>
           ) : (
-            <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex flex-col gap-1.5">
+            <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
+              <div className="flex flex-col gap-1">
                 <Label htmlFor="nome_completo">Nome completo</Label>
                 <Input id="nome_completo" autoComplete="name" {...register("nome_completo")} />
                 {errors.nome_completo && (
@@ -184,86 +185,86 @@ function ApoioPublicoPage() {
                 )}
               </div>
 
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="cpf">CPF</Label>
-                <Input
-                  id="cpf"
-                  inputMode="numeric"
-                  placeholder="000.000.000-00"
-                  {...cpfField}
-                  onChange={(e) => {
-                    e.target.value = formatCPF(e.target.value);
-                    cpfField.onChange(e);
-                  }}
-                />
-                {errors.cpf && <p className="text-xs text-destructive">{errors.cpf.message}</p>}
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="whatsapp">WhatsApp</Label>
-                <Input
-                  id="whatsapp"
-                  inputMode="numeric"
-                  placeholder="(68) 90000-0000"
-                  {...whatsappField}
-                  onChange={(e) => {
-                    e.target.value = formatPhoneBR(e.target.value);
-                    whatsappField.onChange(e);
-                  }}
-                />
-                {errors.whatsapp && (
-                  <p className="text-xs text-destructive">{errors.whatsapp.message}</p>
-                )}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="cpf">CPF</Label>
+                  <Input
+                    id="cpf"
+                    inputMode="numeric"
+                    placeholder="000.000.000-00"
+                    {...cpfField}
+                    onChange={(e) => {
+                      e.target.value = formatCPF(e.target.value);
+                      cpfField.onChange(e);
+                    }}
+                  />
+                  {errors.cpf && <p className="text-xs text-destructive">{errors.cpf.message}</p>}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="whatsapp">WhatsApp</Label>
+                  <Input
+                    id="whatsapp"
+                    inputMode="numeric"
+                    placeholder="(68) 9...."
+                    {...whatsappField}
+                    onChange={(e) => {
+                      e.target.value = formatPhoneBR(e.target.value);
+                      whatsappField.onChange(e);
+                    }}
+                  />
+                  {errors.whatsapp && (
+                    <p className="text-xs text-destructive">{errors.whatsapp.message}</p>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="titulo_eleitor">Título de eleitor</Label>
+                <div className="flex flex-col gap-1">
+                  <Label>Município</Label>
+                  <Controller
+                    control={control}
+                    name="municipio"
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {MUNICIPIOS_ACRE.map((m) => (
+                            <SelectItem key={m} value={m}>
+                              {m}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="local_votacao">Local onde vota</Label>
+                  <Input id="local_votacao" {...register("local_votacao")} />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <Label htmlFor="endereco">Endereço</Label>
+                <Input id="endereco" {...register("endereco")} />
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="titulo_eleitor">Título</Label>
                   <Input id="titulo_eleitor" placeholder="0000 0000 0000" {...register("titulo_eleitor")} />
                   {errors.titulo_eleitor && (
                     <p className="text-xs text-destructive">{errors.titulo_eleitor.message}</p>
                   )}
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="zona">Zona eleitoral</Label>
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="zona">Zona</Label>
                   <Input id="zona" {...register("zona")} />
                 </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <Label>Município</Label>
-                <Controller
-                  control={control}
-                  name="municipio"
-                  render={({ field }) => (
-                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione seu município" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {MUNICIPIOS_ACRE.map((m) => (
-                          <SelectItem key={m} value={m}>
-                            {m}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="endereco">Endereço</Label>
-                <Input id="endereco" {...register("endereco")} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="local_votacao">Local onde vota</Label>
-                  <Input id="local_votacao" {...register("local_votacao")} />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="secao_voto">Seção de voto</Label>
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="secao_voto">Seção</Label>
                   <Input
                     id="secao_voto"
                     inputMode="numeric"
@@ -280,12 +281,12 @@ function ApoioPublicoPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1">
                 <Label htmlFor="observacoes">Alguma observação? (opcional)</Label>
                 <Textarea id="observacoes" rows={2} {...register("observacoes")} />
               </div>
 
-              <Button type="submit" className="mt-2" disabled={submitting}>
+              <Button type="submit" className="mt-1" disabled={submitting}>
                 {submitting ? "Enviando..." : "Enviar cadastro"}
               </Button>
               <p className="text-center text-[11px] text-muted-foreground">
@@ -293,8 +294,9 @@ function ApoioPublicoPage() {
               </p>
             </form>
           )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
