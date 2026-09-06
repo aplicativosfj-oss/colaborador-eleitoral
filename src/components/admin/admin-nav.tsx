@@ -6,6 +6,7 @@ import { StarEmblem } from "@/components/site/star-emblem";
 import { AcreFlag } from "@/components/site/acre-flag";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 import { JovemPanPlayer } from "@/components/site/jovem-pan-player";
+import { AvatarUpload } from "@/components/admin/avatar-upload";
 import { useAuth } from "@/lib/auth-context";
 import type { UserRole } from "@/lib/types";
 
@@ -38,7 +39,7 @@ export function AdminNav() {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform active:scale-95">
+          <span className="flex size-8 items-center justify-center rounded-full bg-brand-gold text-brand-navy transition-transform active:scale-95">
             <StarEmblem className="size-4" />
           </span>
           <span className="hidden text-sm sm:inline">Colaborador Eleitoral</span>
@@ -72,6 +73,7 @@ export function AdminNav() {
           <div className="hidden sm:block">
             <JovemPanPlayer />
           </div>
+          {profile && <AvatarUpload size="sm" />}
           <ThemeToggle />
           <Button
             variant="ghost"

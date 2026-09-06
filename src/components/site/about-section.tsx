@@ -13,7 +13,7 @@ export function AboutSection() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(115deg, oklch(0.17 0.03 155 / 0.92) 0%, oklch(0.17 0.03 155 / 0.82) 45%, oklch(0.17 0.03 155 / 0.55) 100%)",
+            "linear-gradient(115deg, var(--brand-navy) 0%, oklch(0.28 0.1 264 / 0.88) 45%, oklch(0.42 0.13 152 / 0.55) 100%)",
         }}
       />
 

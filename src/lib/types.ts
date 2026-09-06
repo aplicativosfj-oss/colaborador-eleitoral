@@ -6,6 +6,7 @@ export interface Profile {
   cpf: string | null;
   whatsapp: string | null;
   role: UserRole;
+  avatar_path: string | null;
   created_at: string;
 }
 

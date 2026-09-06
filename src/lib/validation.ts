@@ -49,6 +49,21 @@ export const loginSchema = z.object({
   password: z.string().min(6, "Mínimo de 6 caracteres"),
 });
 
+export const novoUsuarioSchema = z.object({
+  full_name: z.string().min(3, "Informe o nome completo"),
+  cpf: z
+    .string()
+    .min(1, "Informe o CPF")
+    .refine((v) => isValidCPF(v), "CPF inválido"),
+  whatsapp: z
+    .string()
+    .min(1, "Informe um WhatsApp válido")
+    .refine((v) => isValidPhoneBR(v), "Telefone inválido, use (DD) 9XXXX-XXXX"),
+  email: z.string().email("Informe um e-mail válido"),
+  password: z.string().min(6, "Mínimo de 6 caracteres"),
+  role: z.enum(["colaborador", "candidato", "admin"]),
+});
+
 export const interessadoSchema = z.object({
   nome_completo: z.string().min(3, "Informe seu nome completo"),
   cpf: z

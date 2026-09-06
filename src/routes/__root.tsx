@@ -88,6 +88,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Plataforma oficial de mobilização da campanha de Pedro Abreu a Deputado Estadual pelo Acre em 2026.",
       },
       { name: "author", content: "Colaborador Eleitoral" },
+      { name: "theme-color", content: "#16224A" },
       { property: "og:title", content: "Colaborador Eleitoral | Pedro Abreu 2026" },
       {
         property: "og:description",
@@ -97,15 +98,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       {
         property: "og:image",
-        content:
-          "https://upload.wikimedia.org/wikipedia/commons/d/dd/Cal%C3%A7ad%C3%A3o_da_Gameleira%2C_Rio_Branco_Acre.jpg",
+        content: "/pastor.jpg",
       },
-      { property: "og:image:alt", content: "Orla de Rio Branco, capital do Acre" },
+      {
+        property: "og:image:alt",
+        content: "Pastor Pedro Abreu, candidato a Deputado Estadual do Acre, número 15150",
+      },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:image",
-        content:
-          "https://upload.wikimedia.org/wikipedia/commons/d/dd/Cal%C3%A7ad%C3%A3o_da_Gameleira%2C_Rio_Branco_Acre.jpg",
+        content: "/pastor.jpg",
       },
     ],
     links: [

@@ -1,6 +1,7 @@
 import { supabase } from "./supabase";
 
 const BUCKET = "fotos-eleitores";
+const AVATAR_BUCKET = "avatares";
 
 export async function uploadFotoEleitor(userId: string, file: File) {
   const ext = file.name.split(".").pop() ?? "jpg";
@@ -25,4 +26,24 @@ export async function getSignedUrls(paths: string[]) {
     if (d.signedUrl && d.path) map[d.path] = d.signedUrl;
   });
   return map;
+}
+
+export async function uploadAvatar(userId: string, file: File) {
+  const ext = file.name.split(".").pop() ?? "jpg";
+  const path = `${userId}/avatar.${ext}`;
+  const { error } = await supabase.storage.from(AVATAR_BUCKET).upload(path, file, {
+    cacheControl: "3600",
+    upsert: true,
+  });
+  if (error) throw error;
+  return path;
+}
+
+export async function getAvatarSignedUrl(path: string | null | undefined) {
+  if (!path) return null;
+  const { data, error } = await supabase.storage
+    .from(AVATAR_BUCKET)
+    .createSignedUrl(path, 60 * 60);
+  if (error) throw error;
+  return data?.signedUrl ?? null;
 }

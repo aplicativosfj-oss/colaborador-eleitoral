@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2 font-semibold tracking-tight">
-            <span className="flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <span className="flex size-6 items-center justify-center rounded-full bg-brand-gold text-brand-navy">
               <StarEmblem className="size-3" />
             </span>
             <span className="text-sm">Colaborador Eleitoral</span>

@@ -64,15 +64,16 @@ function LoginPage() {
   return (
     <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden px-4 py-16">
       <img
-        src="https://upload.wikimedia.org/wikipedia/commons/d/dd/Cal%C3%A7ad%C3%A3o_da_Gameleira%2C_Rio_Branco_Acre.jpg"
+        src="/pastor.jpg"
         alt=""
-        className="absolute inset-0 size-full object-cover"
+        className="absolute inset-0 size-full object-cover object-left-top"
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(160deg, oklch(0.17 0.03 155 / 0.9) 0%, oklch(0.2 0.05 155 / 0.82) 55%, oklch(0.33 0.085 152 / 0.6) 100%)",
+            "linear-gradient(160deg, var(--brand-navy) 0%, oklch(0.24 0.09 264 / 0.92) 45%, var(--brand-green) 100%)",
+          opacity: 0.93,
         }}
       />
 
@@ -87,7 +88,7 @@ function LoginPage() {
 
         <Card className="w-full rounded-2xl border-white/10 bg-card/95 shadow-xl backdrop-blur">
           <CardHeader className="items-center text-center">
-            <span className="mb-2 flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform active:scale-95">
+            <span className="mb-2 flex size-10 items-center justify-center rounded-full bg-brand-gold text-brand-navy transition-transform active:scale-95">
               <StarEmblem className="size-5" />
             </span>
             <CardTitle className="text-xl">Entrar</CardTitle>

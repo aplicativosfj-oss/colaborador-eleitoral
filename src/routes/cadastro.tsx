@@ -67,17 +67,31 @@ function CadastroPage() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-muted/30 px-4 py-16">
+    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden px-4 py-16">
+      <img
+        src="/pastor.jpg"
+        alt=""
+        className="absolute inset-0 size-full object-cover object-left-top"
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(160deg, var(--brand-navy) 0%, oklch(0.24 0.09 264 / 0.92) 45%, var(--brand-green) 100%)",
+          opacity: 0.93,
+        }}
+      />
+
       <Link
         to="/"
-        className="mb-4 flex w-full max-w-sm items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+        className="relative mb-4 flex w-full max-w-sm items-center gap-1.5 text-sm font-medium text-white/85 transition-colors hover:text-white"
       >
         <ArrowLeft className="size-4" />
         Voltar para o início
       </Link>
-      <Card className="w-full max-w-sm rounded-2xl">
+      <Card className="relative w-full max-w-sm rounded-2xl border-white/10 bg-card/95 shadow-xl backdrop-blur">
         <CardHeader className="items-center text-center">
-          <span className="mb-2 flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <span className="mb-2 flex size-10 items-center justify-center rounded-full bg-brand-gold text-brand-navy">
             <StarEmblem className="size-5" />
           </span>
           <CardTitle className="text-xl">Quero ser colaborador</CardTitle>
