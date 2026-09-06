@@ -31,9 +31,11 @@ function AdminLayout() {
   if (loading || !session) return <FullscreenLoader />;
 
   return (
-    <div className="min-h-[100dvh] bg-muted/20">
+    <div className="min-h-[100dvh] bg-muted/30 md:flex">
       <AdminNav />
-      <Outlet />
+      <main className="min-w-0 flex-1 overflow-x-hidden">
+        <Outlet />
+      </main>
     </div>
   );
 }

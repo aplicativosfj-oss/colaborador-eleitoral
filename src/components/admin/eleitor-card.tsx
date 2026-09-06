@@ -24,10 +24,10 @@ export function EleitorCard({
     <button
       type="button"
       onClick={onClick}
-      className="group flex flex-col gap-3 rounded-2xl border border-border/70 bg-card p-4 text-left transition-[color,background-color,border-color,transform,box-shadow] duration-200 hover:border-primary/40 hover:bg-accent/40 hover:shadow-md motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.98]"
+      className="group flex flex-col gap-2.5 rounded-lg border border-border bg-card p-3.5 text-left shadow-sm transition-[color,background-color,border-color,transform,box-shadow] duration-200 hover:border-primary/40 hover:bg-accent/40 hover:shadow-md motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[0.98]"
     >
       <div className="flex items-center gap-3">
-        <Avatar className="size-12 border">
+        <Avatar className="size-10 border">
           <AvatarImage src={fotoUrl} className="object-cover" />
           <AvatarFallback>
             <User className="size-5 text-muted-foreground" />
