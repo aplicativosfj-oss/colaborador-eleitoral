@@ -17,6 +17,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -214,6 +224,9 @@ function NovoUsuarioDialog({ onCreated }: { onCreated: () => void }) {
 function UsuariosPage() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pendingChange, setPendingChange] = useState<{ profile: Profile; role: UserRole } | null>(
+    null,
+  );
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -280,7 +293,7 @@ function UsuariosPage() {
                   <TableCell>
                     <Select
                       value={p.role}
-                      onValueChange={(value) => updateRole(p.id, value as UserRole)}
+                      onValueChange={(value) => setPendingChange({ profile: p, role: value as UserRole })}
                     >
                       <SelectTrigger className="w-44">
                         <SelectValue />
@@ -306,6 +319,35 @@ function UsuariosPage() {
             </TableBody>
           </Table>
         </div>
+
+        <AlertDialog open={!!pendingChange} onOpenChange={(open) => !open && setPendingChange(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Alterar papel deste usuário?</AlertDialogTitle>
+              <AlertDialogDescription>
+                {pendingChange && (
+                  <>
+                    {pendingChange.profile.full_name || "Este usuário"} passará de{" "}
+                    <strong>{roleLabel[pendingChange.profile.role]}</strong> para{" "}
+                    <strong>{roleLabel[pendingChange.role]}</strong>. Isso muda o que essa pessoa
+                    pode ver e fazer no sistema.
+                  </>
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  if (pendingChange) updateRole(pendingChange.profile.id, pendingChange.role);
+                  setPendingChange(null);
+                }}
+              >
+                Confirmar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </RoleGuard>
   );

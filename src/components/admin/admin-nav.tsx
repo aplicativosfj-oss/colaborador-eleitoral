@@ -3,6 +3,17 @@ import { BarChart3, ClipboardList, LogOut, Menu, UserRoundCog, Users, X } from "
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { CampaignMark } from "@/components/site/campaign-mark";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 import { JovemPanPlayer } from "@/components/site/jovem-pan-player";
@@ -74,20 +85,43 @@ export function AdminNav() {
           )}
           {profile && <AvatarUpload size="sm" />}
           <div className="text-primary-foreground"><ThemeToggle /></div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-            aria-label="Sair"
-            onClick={async () => {
-              await signOut();
-              navigate({ to: "/login" });
-            }}
-          >
-            <LogOut className="size-4" />
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                aria-label="Sair"
+              >
+                <LogOut className="size-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Sair da conta?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Você vai precisar entrar de novo com seu CPF e senha para acessar o painel.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={async () => {
+                    await signOut();
+                    navigate({ to: "/login" });
+                  }}
+                >
+                  Sair
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
         <div className="mt-3 hidden md:block"><JovemPanPlayer /></div>
+
+        <p className="mt-3 hidden text-center text-[10px] text-primary-foreground/40 md:block">
+          Desenvolvido por Franc Denis
+        </p>
       </aside>
     </>
   );

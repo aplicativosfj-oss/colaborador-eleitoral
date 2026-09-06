@@ -8,6 +8,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -131,7 +142,10 @@ export function EleitorForm({
   }
 
   return (
-    <form className="grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="grid gap-5 sm:grid-cols-2"
+      onSubmit={isEditing ? (e) => e.preventDefault() : handleSubmit(onSubmit)}
+    >
       <div className="flex items-center gap-4 sm:col-span-2">
         <Avatar className="size-16 border">
           <AvatarImage src={preview ?? fotoUrl ?? undefined} className="object-cover" />
@@ -272,9 +286,34 @@ export function EleitorForm({
             Cancelar
           </Button>
         )}
-        <Button type="submit" className="flex-1" disabled={submitting}>
-          {submitting ? "Salvando..." : isEditing ? "Salvar alterações" : "Salvar cadastro"}
-        </Button>
+        {isEditing ? (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button type="button" className="flex-1" disabled={submitting}>
+                {submitting ? "Salvando..." : "Salvar alterações"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Salvar essas alterações?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Os dados atuais de {eleitor?.nome_completo} serão substituídos pelo que você
+                  preencheu neste formulário.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleSubmit(onSubmit)}>
+                  Salvar alterações
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : (
+          <Button type="submit" className="flex-1" disabled={submitting}>
+            {submitting ? "Salvando..." : "Salvar cadastro"}
+          </Button>
+        )}
       </div>
     </form>
   );
