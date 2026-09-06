@@ -9,13 +9,13 @@ const steps = [
   },
   {
     icon: ClipboardList,
-    title: "Cadastre seus eleitores",
-    body: "Registre nome, contato, local de votação e observações de cada eleitor visitado.",
+    title: "Registre os apoios da sua região",
+    body: "Anote nome, contato e observações de cada pessoa que apoia a candidatura na sua comunidade.",
   },
   {
     icon: BarChart3,
     title: "Acompanhe em tempo real",
-    body: "O candidato acompanha o total de eleitores, por colaborador e por município.",
+    body: "O candidato acompanha o total de apoiadores, por colaborador e por município.",
   },
 ];
 
@@ -28,7 +28,7 @@ export function HowItWorksSection() {
             Como funciona a mobilização
           </h2>
           <p className="mt-3 max-w-[46ch] text-sm leading-relaxed text-muted-foreground md:text-base">
-            Um painel simples para o colaborador cadastrar eleitores em campo e um painel completo
+            Um painel simples para o colaborador registrar apoios em campo e um painel completo
             para o candidato enxergar o resultado do trabalho de cada equipe, em cada município do
             Acre.
           </p>

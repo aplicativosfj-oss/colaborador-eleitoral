@@ -20,12 +20,13 @@ export function AboutSection() {
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16">
         <Reveal className="max-w-[52ch]">
           <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
-            Uma campanha construída rua a rua
+            Uma rede de colaboração presente em todo o Acre
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-white/80 md:text-base">
-            A candidatura de Pedro Abreu para Deputado Estadual do Acre é sustentada por
-            colaboradores em cada um dos 22 municípios do estado. Cada visita, cada conversa e cada
-            cadastro fortalece essa rede.
+            A candidatura do Pastor Pedro Abreu a Deputado Estadual do Acre é construída com o apoio
+            de colaboradores voluntários nos 22 municípios do estado. Cada conversa, cada visita e
+            cada apoio somado fortalece essa rede e ajuda a representar o Acre na Assembleia
+            Legislativa.
           </p>
         </Reveal>
         <p className="relative mt-6 text-[11px] text-white/60">

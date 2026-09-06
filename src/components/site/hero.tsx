@@ -44,7 +44,7 @@ export function Hero() {
             Mobilização que vence eleição.
           </h1>
           <p className="mt-2.5 max-w-[46ch] text-sm leading-relaxed text-white/80 md:text-base">
-            Cadastre colaboradores, acompanhe eleitores em tempo real e organize a campanha do
+            Cadastre colaboradores, acompanhe apoiadores em tempo real e organize a campanha do
             Pastor Pedro Abreu para Deputado Estadual do Acre.
           </p>
           <p className="mt-2 max-w-[46ch] font-medium italic text-brand-gold/95">
