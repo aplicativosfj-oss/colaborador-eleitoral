@@ -8,7 +8,7 @@ const CANDIDATE_IMAGE = "/pastor.jpg";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative flex min-h-[calc(100dvh-56px)] items-center overflow-hidden">
       <img
         src={heroBg}
         alt=""
@@ -35,22 +35,22 @@ export function Hero() {
         }}
       />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 pb-12 pt-10 sm:px-6 md:grid-cols-2 md:pb-16 md:pt-14">
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-6 px-4 py-8 sm:px-6 md:grid-cols-2 md:gap-8 md:py-10">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-gold">
             Eleições 2026 · Acre · Nº 15150
           </p>
-          <h1 className="mt-3 text-3xl font-semibold leading-[1.1] tracking-tight text-white md:text-4xl lg:text-5xl">
+          <h1 className="mt-2.5 text-2xl font-semibold leading-[1.1] tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
             Mobilização que vence eleição.
           </h1>
-          <p className="mt-3 max-w-[46ch] text-sm leading-relaxed text-white/80 md:text-base">
+          <p className="mt-2.5 max-w-[46ch] text-sm leading-relaxed text-white/80 md:text-base">
             Cadastre colaboradores, acompanhe eleitores em tempo real e organize a campanha do
             Pastor Pedro Abreu para Deputado Estadual do Acre.
           </p>
           <p className="mt-2 max-w-[46ch] font-medium italic text-brand-gold/95">
             Fé, trabalho e compromisso com o nosso povo!
           </p>
-          <div className="mt-5 flex flex-wrap items-center gap-2.5">
+          <div className="mt-4 flex flex-wrap items-center gap-2.5">
             <Button asChild className="bg-brand-gold text-brand-navy hover:bg-brand-gold/90">
               <Link to="/cadastro">
                 Quero ser colaborador
@@ -68,15 +68,15 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={120}>
-          <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-2xl bg-white p-3 shadow-2xl ring-4 ring-brand-gold/80 md:max-w-none">
+          <div className="relative mx-auto max-h-[46dvh] w-full max-w-xs overflow-hidden rounded-2xl bg-white p-2.5 shadow-2xl ring-4 ring-brand-gold/80 sm:max-h-[52dvh] md:max-h-[62dvh] md:max-w-sm">
             <img
               src={CANDIDATE_IMAGE}
               alt="Pastor Pedro Abreu, candidato a Deputado Estadual do Acre, número 15150"
-              className="size-full rounded-xl object-contain"
+              className="mx-auto max-h-[42dvh] w-auto rounded-xl object-contain sm:max-h-[48dvh] md:max-h-[58dvh]"
               loading="eager"
             />
           </div>
-          <p className="mt-2 text-center text-[11px] text-white/70 md:text-right">
+          <p className="mt-1.5 text-center text-[11px] text-white/70 md:text-right">
             Pastor Pedro Abreu · Deputado Estadual · Nº 15150
           </p>
         </Reveal>
