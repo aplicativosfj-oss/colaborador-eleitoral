@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Users, UserPlus } from "lucide-react";
+import { Users, UserPlus, MapPin } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { StatCard } from "@/components/admin/stat-card";
 import { EleitorForm } from "@/components/admin/eleitor-form";
 import { EleitorCard } from "@/components/admin/eleitor-card";
 import { EleitorDetailDialog } from "@/components/admin/eleitor-detail-dialog";
@@ -48,6 +49,11 @@ function ColaboradorDashboard() {
   useEffect(() => {
     load();
   }, [load]);
+
+  const municipiosCobertos = useMemo(
+    () => new Set(eleitores.map((e) => e.municipio).filter(Boolean)).size,
+    [eleitores],
+  );
 
   async function handleDelete(eleitor: Eleitor) {
     setDeleting(true);
@@ -102,7 +108,12 @@ function ColaboradorDashboard() {
         </section>
 
         <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
-          <Tabs value={tab} onValueChange={setTab}>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <StatCard icon={Users} label="Apoiadores cadastrados" value={eleitores.length} />
+            <StatCard icon={MapPin} label="Municípios alcançados" value={municipiosCobertos} />
+          </div>
+
+          <Tabs value={tab} onValueChange={setTab} className="mt-8">
             <TabsList>
               <TabsTrigger value="cadastros" className="gap-1.5">
                 <Users className="size-4" />

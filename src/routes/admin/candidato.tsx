@@ -85,6 +85,14 @@ function CandidatoDashboard() {
     [eleitores, selectedColaborador],
   );
 
+  const colaboradoresPorTotal = useMemo(
+    () =>
+      [...colaboradores].sort(
+        (a, b) => (totalPorColaborador[b.id] ?? 0) - (totalPorColaborador[a.id] ?? 0),
+      ),
+    [colaboradores, totalPorColaborador],
+  );
+
   return (
     <RoleGuard allow={["candidato", "admin"]}>
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -115,7 +123,7 @@ function CandidatoDashboard() {
             </p>
           ) : (
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {colaboradores.map((c) => (
+              {colaboradoresPorTotal.map((c) => (
                 <ColaboradorCard
                   key={c.id}
                   colaborador={c}
