@@ -42,6 +42,15 @@ export const eleitorSchema = z.object({
 
 export type EleitorSchema = z.infer<typeof eleitorSchema>;
 
+// Autocadastro público (via link do colaborador): mesmos dados de contato,
+// sem os campos internos do colaborador (valor recebido, data de reunião).
+export const apoioPublicoSchema = eleitorSchema.omit({
+  valor_recebido: true,
+  data_reuniao: true,
+});
+
+export type ApoioPublicoSchema = z.infer<typeof apoioPublicoSchema>;
+
 export const loginSchema = z.object({
   cpf: z
     .string()

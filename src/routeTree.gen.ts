@@ -18,6 +18,7 @@ import { Route as AdminCandidatoRouteImport } from './routes/admin/candidato'
 import { Route as AdminColaboradorRouteImport } from './routes/admin/colaborador'
 import { Route as AdminInteressadosRouteImport } from './routes/admin/interessados'
 import { Route as AdminUsuariosRouteImport } from './routes/admin/usuarios'
+import { Route as ApoioColaboradorIdRouteImport } from './routes/apoio/$colaboradorId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
   path: '/usuarios',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApoioColaboradorIdRoute = ApoioColaboradorIdRouteImport.update({
+  id: '/apoio/$colaboradorId',
+  path: '/apoio/$colaboradorId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/admin/colaborador': typeof AdminColaboradorRoute
   '/admin/interessados': typeof AdminInteressadosRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
+  '/apoio/$colaboradorId': typeof ApoioColaboradorIdRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/admin/colaborador': typeof AdminColaboradorRoute
   '/admin/interessados': typeof AdminInteressadosRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
+  '/apoio/$colaboradorId': typeof ApoioColaboradorIdRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/admin/colaborador': typeof AdminColaboradorRoute
   '/admin/interessados': typeof AdminInteressadosRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
+  '/apoio/$colaboradorId': typeof ApoioColaboradorIdRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/admin/colaborador'
     | '/admin/interessados'
     | '/admin/usuarios'
+    | '/apoio/$colaboradorId'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/admin/colaborador'
     | '/admin/interessados'
     | '/admin/usuarios'
+    | '/apoio/$colaboradorId'
     | '/admin'
   id:
     | '__root__'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/admin/colaborador'
     | '/admin/interessados'
     | '/admin/usuarios'
+    | '/apoio/$colaboradorId'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -138,6 +150,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   CadastroRoute: typeof CadastroRoute
   LoginRoute: typeof LoginRoute
+  ApoioColaboradorIdRoute: typeof ApoioColaboradorIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsuariosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/apoio/$colaboradorId': {
+      id: '/apoio/$colaboradorId'
+      path: '/apoio/$colaboradorId'
+      fullPath: '/apoio/$colaboradorId'
+      preLoaderRoute: typeof ApoioColaboradorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -231,6 +251,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   CadastroRoute: CadastroRoute,
   LoginRoute: LoginRoute,
+  ApoioColaboradorIdRoute: ApoioColaboradorIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

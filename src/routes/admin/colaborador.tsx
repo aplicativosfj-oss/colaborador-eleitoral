@@ -5,6 +5,7 @@ import { Users, UserPlus, MapPin } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { StatCard } from "@/components/admin/stat-card";
+import { ShareLinkCard } from "@/components/admin/share-link-card";
 import { EleitorForm } from "@/components/admin/eleitor-form";
 import { EleitorCard } from "@/components/admin/eleitor-card";
 import { EleitorDetailDialog } from "@/components/admin/eleitor-detail-dialog";
@@ -112,6 +113,12 @@ function ColaboradorDashboard() {
             <StatCard icon={Users} label="Apoiadores cadastrados" value={eleitores.length} />
             <StatCard icon={MapPin} label="Municípios alcançados" value={municipiosCobertos} />
           </div>
+
+          {user && (
+            <div className="mt-4">
+              <ShareLinkCard url={`${window.location.origin}/apoio/${user.id}`} />
+            </div>
+          )}
 
           <Tabs value={tab} onValueChange={setTab} className="mt-8">
             <TabsList>
