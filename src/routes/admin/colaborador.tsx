@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { Users } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
+import { Users, UserPlus } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EleitorForm } from "@/components/admin/eleitor-form";
 import { EleitorCard } from "@/components/admin/eleitor-card";
 import { EleitorDetailDialog } from "@/components/admin/eleitor-detail-dialog";
@@ -20,6 +22,9 @@ function ColaboradorDashboard() {
   const [eleitores, setEleitores] = useState<Eleitor[]>([]);
   const [fotoUrls, setFotoUrls] = useState<Record<string, string>>({});
   const [selected, setSelected] = useState<Eleitor | null>(null);
+  const [editing, setEditing] = useState<Eleitor | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [tab, setTab] = useState("cadastros");
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -44,76 +49,151 @@ function ColaboradorDashboard() {
     load();
   }, [load]);
 
+  async function handleDelete(eleitor: Eleitor) {
+    setDeleting(true);
+    const { error } = await supabase.from("eleitores").delete().eq("id", eleitor.id);
+    setDeleting(false);
+
+    if (error) {
+      toast.error("Não foi possível excluir", { description: error.message });
+      return;
+    }
+
+    setEleitores((prev) => prev.filter((e) => e.id !== eleitor.id));
+    setSelected(null);
+    toast.success("Cadastro excluído definitivamente");
+  }
+
   return (
     <RoleGuard allow={["colaborador"]}>
-      <div className="relative isolate">
-        <div
-          className="fixed inset-0 -z-10 bg-cover bg-center opacity-[0.06] dark:opacity-[0.09]"
-          style={{
-            backgroundImage:
-              "url(https://upload.wikimedia.org/wikipedia/commons/f/f4/Assis_Lima_Rio_Acre_vista_Ponte_Jucelio_Kubitschek_e_Ponte_coronel_Sebasti%C3%A3o_Dantas_Passarela_Joaquim_Macedo_Rio_Branco_AC_%2826992942418%29.jpg)",
+      <div className="flex min-h-[100dvh] flex-col">
+        <section className="relative overflow-hidden">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(110deg, var(--brand-navy) 0%, var(--brand-blue) 60%, var(--brand-green) 100%)",
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.06]"
+            style={{
+              backgroundImage: "repeating-linear-gradient(135deg, white 0 2px, transparent 2px 22px)",
+            }}
+          />
+          <img
+            src="/pastor.jpg"
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 hidden w-64 object-cover object-top opacity-90 [mask-image:linear-gradient(to_left,black_40%,transparent)] md:block"
+          />
+
+          <div className="relative mx-auto max-w-5xl px-4 py-8 sm:px-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-gold">
+              Painel do colaborador
+            </p>
+            <h1 className="mt-1.5 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+              {profile ? `Olá, ${profile.full_name.split(" ")[0]}` : "Bem-vindo(a)"}
+            </h1>
+            <p className="mt-1.5 max-w-[52ch] text-sm text-white/75">
+              Gerencie os apoios que você cadastrou para a campanha do Pastor Pedro Abreu.
+            </p>
+          </div>
+        </section>
+
+        <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
+          <Tabs value={tab} onValueChange={setTab}>
+            <TabsList>
+              <TabsTrigger value="cadastros" className="gap-1.5">
+                <Users className="size-4" />
+                Meus cadastros
+                <span className="ml-0.5 rounded-full bg-primary/15 px-1.5 text-xs text-primary">
+                  {eleitores.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="novo" className="gap-1.5">
+                <UserPlus className="size-4" />
+                Novo cadastro
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="cadastros" className="mt-6">
+              {!loading && eleitores.length === 0 && (
+                <p className="rounded-2xl border border-dashed border-border py-12 text-center text-sm text-muted-foreground">
+                  Nenhum cadastro ainda.{" "}
+                  <button
+                    type="button"
+                    className="font-medium text-foreground underline underline-offset-4"
+                    onClick={() => setTab("novo")}
+                  >
+                    Cadastre o primeiro apoio
+                  </button>
+                  .
+                </p>
+              )}
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {eleitores.map((e) => (
+                  <EleitorCard
+                    key={e.id}
+                    eleitor={e}
+                    fotoUrl={e.foto_path ? fotoUrls[e.foto_path] : undefined}
+                    onClick={() => setSelected(e)}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="novo" className="mt-6">
+              <div className="mx-auto max-w-2xl rounded-2xl border border-border/70 bg-card p-5 sm:p-6">
+                <h2 className="text-lg font-semibold text-foreground">Cadastrar novo apoio</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Preencha os dados abaixo. Você pode editar ou excluir depois, na aba "Meus
+                  cadastros".
+                </p>
+                <div className="mt-5">
+                  <EleitorForm
+                    onCreated={() => {
+                      load();
+                      setTab("cadastros");
+                    }}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        <EleitorDetailDialog
+          eleitor={selected}
+          fotoUrl={selected?.foto_path ? fotoUrls[selected.foto_path] : undefined}
+          onOpenChange={(open) => !open && setSelected(null)}
+          onEdit={(e) => {
+            setEditing(e);
+            setSelected(null);
           }}
-          aria-hidden="true"
+          onDelete={handleDelete}
+          deleting={deleting}
         />
 
-        <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-          {profile && (
-            <div className="mb-6">
-              <h1 className="text-xl font-semibold text-foreground">
-                Olá, {profile.full_name.split(" ")[0]}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Bem-vindo(a) de volta ao seu painel de cadastro.
-              </p>
-            </div>
-          )}
-
-          <Card className="rounded-2xl">
-            <CardHeader>
-              <CardTitle>Cadastrar eleitor</CardTitle>
-              <CardDescription>
-                Preencha os dados abaixo. Depois de salvo, o cadastro fica disponível apenas para
-                consulta.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <EleitorForm onCreated={load} />
-            </CardContent>
-          </Card>
-
-          <div className="mt-10">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-foreground">Meus eleitores</h2>
-              <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <Users className="size-4" />
-                {eleitores.length}
-              </span>
-            </div>
-
-            {!loading && eleitores.length === 0 && (
-              <p className="rounded-2xl border border-dashed border-border py-12 text-center text-sm text-muted-foreground">
-                Nenhum eleitor cadastrado ainda. Use o formulário acima para começar.
-              </p>
+        <Dialog open={!!editing} onOpenChange={(open) => !open && setEditing(null)}>
+          <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Editar cadastro</DialogTitle>
+            </DialogHeader>
+            {editing && (
+              <EleitorForm
+                eleitor={editing}
+                fotoUrl={editing.foto_path ? fotoUrls[editing.foto_path] : undefined}
+                onCancel={() => setEditing(null)}
+                onCreated={() => {
+                  setEditing(null);
+                  load();
+                }}
+              />
             )}
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {eleitores.map((e) => (
-                <EleitorCard
-                  key={e.id}
-                  eleitor={e}
-                  fotoUrl={e.foto_path ? fotoUrls[e.foto_path] : undefined}
-                  onClick={() => setSelected(e)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <EleitorDetailDialog
-            eleitor={selected}
-            fotoUrl={selected?.foto_path ? fotoUrls[selected.foto_path] : undefined}
-            onOpenChange={(open) => !open && setSelected(null)}
-          />
-        </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </RoleGuard>
   );

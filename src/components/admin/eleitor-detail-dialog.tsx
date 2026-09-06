@@ -5,9 +5,21 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { User } from "lucide-react";
+import { Pencil, Trash2, User } from "lucide-react";
 import type { Eleitor } from "@/lib/types";
 
 function formatBRL(value: number | null) {
@@ -36,11 +48,19 @@ export function EleitorDetailDialog({
   fotoUrl,
   colaboradorName,
   onOpenChange,
+  onEdit,
+  onDelete,
+  deleting,
 }: {
   eleitor: Eleitor | null;
   fotoUrl?: string | undefined;
   colaboradorName?: string | undefined;
   onOpenChange: (open: boolean) => void;
+  /** When provided, shows an "Editar" button that calls this instead of just closing. */
+  onEdit?: (eleitor: Eleitor) => void;
+  /** When provided, shows a "Excluir" button with a confirmation step. */
+  onDelete?: (eleitor: Eleitor) => void;
+  deleting?: boolean;
 }) {
   return (
     <Dialog open={!!eleitor} onOpenChange={onOpenChange}>
@@ -91,6 +111,55 @@ export function EleitorDetailDialog({
                 {eleitor.observacoes || "Nenhuma anotação registrada."}
               </p>
             </div>
+
+            {(onEdit || onDelete) && (
+              <div className="flex gap-2 pt-1">
+                {onEdit && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1 gap-1.5"
+                    onClick={() => onEdit(eleitor)}
+                  >
+                    <Pencil className="size-4" />
+                    Editar
+                  </Button>
+                )}
+                {onDelete && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="flex-1 gap-1.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        disabled={deleting}
+                      >
+                        <Trash2 className="size-4" />
+                        Excluir
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir este cadastro?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Isso remove definitivamente o cadastro de {eleitor.nome_completo}. Essa
+                          ação não pode ser desfeita.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          onClick={() => onDelete(eleitor)}
+                        >
+                          Excluir definitivamente
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </div>
+            )}
           </>
         )}
       </DialogContent>

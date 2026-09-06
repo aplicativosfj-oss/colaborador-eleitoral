@@ -21,9 +21,40 @@ import { uploadFotoEleitor } from "@/lib/storage";
 import { eleitorSchema, type EleitorSchema } from "@/lib/validation";
 import { MUNICIPIOS_ACRE } from "@/lib/municipios";
 import { formatCPF, formatPhoneBR, formatSecaoEleitoral } from "@/lib/validators";
+import type { Eleitor } from "@/lib/types";
 
-export function EleitorForm({ onCreated }: { onCreated: () => void }) {
+function toFormValues(eleitor?: Eleitor | null): Partial<EleitorSchema> {
+  if (!eleitor) return {};
+  return {
+    nome_completo: eleitor.nome_completo,
+    cpf: eleitor.cpf ? formatCPF(eleitor.cpf) : "",
+    titulo_eleitor: eleitor.titulo_eleitor ?? "",
+    zona: eleitor.zona ?? "",
+    whatsapp: eleitor.whatsapp ? formatPhoneBR(eleitor.whatsapp) : "",
+    endereco: eleitor.endereco ?? "",
+    municipio: eleitor.municipio ?? "",
+    local_votacao: eleitor.local_votacao ?? "",
+    secao_voto: eleitor.secao_voto ?? "",
+    valor_recebido: eleitor.valor_recebido != null ? String(eleitor.valor_recebido) : "",
+    data_reuniao: eleitor.data_reuniao ?? "",
+    observacoes: eleitor.observacoes ?? "",
+  };
+}
+
+export function EleitorForm({
+  eleitor,
+  fotoUrl,
+  onCreated,
+  onCancel,
+}: {
+  /** When provided, the form edits this record instead of creating a new one. */
+  eleitor?: Eleitor | null;
+  fotoUrl?: string | undefined;
+  onCreated: () => void;
+  onCancel?: () => void;
+}) {
   const { user } = useAuth();
+  const isEditing = !!eleitor;
   const [submitting, setSubmitting] = useState(false);
   const [foto, setFoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -34,7 +65,10 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EleitorSchema>({ resolver: zodResolver(eleitorSchema) });
+  } = useForm<EleitorSchema>({
+    resolver: zodResolver(eleitorSchema),
+    defaultValues: toFormValues(eleitor),
+  });
 
   const cpfField = register("cpf");
   const whatsappField = register("whatsapp");
@@ -50,13 +84,12 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
     if (!user) return;
     setSubmitting(true);
     try {
-      let foto_path: string | null = null;
+      let foto_path: string | null | undefined = undefined;
       if (foto) {
         foto_path = await uploadFotoEleitor(user.id, foto);
       }
 
-      const { error } = await supabase.from("eleitores").insert({
-        colaborador_id: user.id,
+      const payload = {
         nome_completo: values.nome_completo,
         cpf: values.cpf,
         titulo_eleitor: values.titulo_eleitor || null,
@@ -69,28 +102,24 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
         valor_recebido: values.valor_recebido ? Number(values.valor_recebido) : null,
         data_reuniao: values.data_reuniao || null,
         observacoes: values.observacoes || null,
-        foto_path,
-      });
+        ...(foto_path !== undefined ? { foto_path } : {}),
+      };
 
-      if (error) throw error;
+      if (isEditing) {
+        const { error } = await supabase.from("eleitores").update(payload).eq("id", eleitor.id);
+        if (error) throw error;
+        toast.success("Cadastro atualizado");
+      } else {
+        const { error } = await supabase
+          .from("eleitores")
+          .insert({ colaborador_id: user.id, foto_path: foto_path ?? null, ...payload });
+        if (error) throw error;
+        toast.success("Cadastro salvo com sucesso");
+        reset({});
+        setFoto(null);
+        setPreview(null);
+      }
 
-      toast.success("Eleitor cadastrado com sucesso");
-      reset({
-        nome_completo: "",
-        cpf: "",
-        titulo_eleitor: "",
-        zona: "",
-        whatsapp: "",
-        endereco: "",
-        municipio: "",
-        local_votacao: "",
-        secao_voto: "",
-        valor_recebido: "",
-        data_reuniao: "",
-        observacoes: "",
-      });
-      setFoto(null);
-      setPreview(null);
       onCreated();
     } catch (err) {
       toast.error("Não foi possível salvar o cadastro", {
@@ -105,13 +134,13 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
     <form className="grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-center gap-4 sm:col-span-2">
         <Avatar className="size-16 border">
-          <AvatarImage src={preview ?? undefined} />
+          <AvatarImage src={preview ?? fotoUrl ?? undefined} className="object-cover" />
           <AvatarFallback>
             <ImagePlus className="size-5 text-muted-foreground" />
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="foto">Foto do eleitor</Label>
+          <Label htmlFor="foto">Foto</Label>
           <Input id="foto" type="file" accept="image/*" onChange={handleFotoChange} />
         </div>
       </div>
@@ -237,9 +266,16 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
         <Textarea id="observacoes" rows={3} {...register("observacoes")} />
       </div>
 
-      <Button type="submit" className="sm:col-span-2" disabled={submitting}>
-        {submitting ? "Salvando..." : "Salvar cadastro"}
-      </Button>
+      <div className="flex gap-2 sm:col-span-2">
+        {onCancel && (
+          <Button type="button" variant="outline" className="flex-1" onClick={onCancel}>
+            Cancelar
+          </Button>
+        )}
+        <Button type="submit" className="flex-1" disabled={submitting}>
+          {submitting ? "Salvando..." : isEditing ? "Salvar alterações" : "Salvar cadastro"}
+        </Button>
+      </div>
     </form>
   );
 }
