@@ -15,6 +15,13 @@ function formatBRL(value: number | null) {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+function formatDate(value: string | null) {
+  if (!value) return null;
+  const d = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return value;
+  return d.toLocaleDateString("pt-BR");
+}
+
 function Field({ label, value }: { label: string; value: string | null }) {
   return (
     <div>
@@ -68,6 +75,7 @@ export function EleitorDetailDialog({
               <Field label="Município" value={eleitor.municipio} />
               <Field label="Local de votação" value={eleitor.local_votacao} />
               <Field label="Valor recebido" value={formatBRL(eleitor.valor_recebido)} />
+              <Field label="Data da reunião/visita" value={formatDate(eleitor.data_reuniao)} />
               <Field label="Endereço" value={eleitor.endereco} />
               <Field
                 label="Cadastrado em"

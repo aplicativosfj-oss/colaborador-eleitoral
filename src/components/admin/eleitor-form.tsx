@@ -67,6 +67,7 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
         local_votacao: values.local_votacao || null,
         secao_voto: values.secao_voto || null,
         valor_recebido: values.valor_recebido ? Number(values.valor_recebido) : null,
+        data_reuniao: values.data_reuniao || null,
         observacoes: values.observacoes || null,
         foto_path,
       });
@@ -85,6 +86,7 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
         local_votacao: "",
         secao_voto: "",
         valor_recebido: "",
+        data_reuniao: "",
         observacoes: "",
       });
       setFoto(null);
@@ -223,6 +225,11 @@ export function EleitorForm({ onCreated }: { onCreated: () => void }) {
           placeholder="0,00"
           {...register("valor_recebido")}
         />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="data_reuniao">Data da reunião/visita</Label>
+        <Input id="data_reuniao" type="date" {...register("data_reuniao")} />
       </div>
 
       <div className="flex flex-col gap-1.5 sm:col-span-2">

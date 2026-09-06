@@ -47,3 +47,19 @@ export async function getAvatarSignedUrl(path: string | null | undefined) {
   if (error) throw error;
   return data?.signedUrl ?? null;
 }
+
+export async function getAvatarSignedUrls(paths: (string | null | undefined)[]) {
+  const unique = Array.from(new Set(paths.filter((p): p is string => !!p)));
+  if (unique.length === 0) return {} as Record<string, string>;
+
+  const { data, error } = await supabase.storage
+    .from(AVATAR_BUCKET)
+    .createSignedUrls(unique, 60 * 60);
+  if (error) throw error;
+
+  const map: Record<string, string> = {};
+  data?.forEach((d) => {
+    if (d.signedUrl && d.path) map[d.path] = d.signedUrl;
+  });
+  return map;
+}

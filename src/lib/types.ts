@@ -24,6 +24,7 @@ export interface Eleitor {
   local_votacao: string | null;
   secao_voto: string | null;
   valor_recebido: number | null;
+  data_reuniao: string | null;
   observacoes: string | null;
   created_at: string;
 }
@@ -49,6 +50,7 @@ export interface EleitorFormValues {
   local_votacao: string;
   secao_voto: string;
   valor_recebido: string;
+  data_reuniao: string;
   observacoes: string;
   foto: File | null;
 }

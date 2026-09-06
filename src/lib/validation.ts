@@ -36,6 +36,7 @@ export const eleitorSchema = z.object({
       message: "Seção eleitoral deve ter 3 ou 4 dígitos",
     }),
   valor_recebido: z.string().optional(),
+  data_reuniao: z.string().optional(),
   observacoes: z.string().optional(),
 });
 
